@@ -14,8 +14,12 @@ export const SectionPosts = styled.section`
   flex-direction: column;
   align-items: flex-end;
 
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 `;
 
 export const SectionComments = styled.div`
@@ -27,7 +31,18 @@ export const SectionComments = styled.div`
   padding-left: 40px;
   margin-top: 22px;
 
-  max-width: 550px;
+  max-width: 580px;
 
-  border-left: 3px solid ${({ theme }) => theme.colors.primary.lightGrayishBlue};
+  position: relative;
+
+  ::after {
+    content: '';
+    position: absolute;
+
+    width: 2px;
+    left: 20px;
+    height: 100%;
+
+    background: ${({ theme }) => theme.colors.primary.lightGrayishBlue};
+  }
 `;

@@ -15,6 +15,20 @@ export const GlobalCSS = createGlobalStyle`
     font-size: 1rem;
 
     background: ${({ theme }) => theme.colors.neutral.lightGray};
+
+    ::-webkit-scrollbar{
+      background: transparent;
+
+      width: 10px;
+
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:${({ theme }) => theme.colors.primary.moderateBlue};
+      border-radius: 10px;
+    }
+
+    scroll-behavior: smooth;
   }
 
   button{
