@@ -69,7 +69,6 @@ export const SectionLikeds = styled.div`
   padding: 4px;
 
   border-radius: 10px;
-  max-width: 40px;
 
   display: flex;
   flex-direction: column;
@@ -181,6 +180,12 @@ export const ContainerContent = styled.div`
 
     color: ${({ theme }) => theme.colors.neutral.grayishBlue};
     font-weight: 400;
+
+    span {
+      color: ${({ theme }) => theme.colors.primary.moderateBlue};
+
+      font-weight: 600;
+    }
   }
 
   @media screen and (max-width: 500px) {

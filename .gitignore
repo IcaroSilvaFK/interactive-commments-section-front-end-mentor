@@ -15,6 +15,9 @@ dist-ssr
 .env
 seila.txt
 
+
+.env
+seila.txt
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

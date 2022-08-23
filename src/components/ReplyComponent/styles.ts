@@ -1,20 +1,23 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
+  width: 100%;
+
   display: flex;
   align-items: flex-start;
   justify-content: center;
 
   background: ${({ theme }) => theme.colors.neutral.white};
 
-  padding: 20px 30px;
+  padding: 20px 12px;
 
   gap: 22px;
 
-  max-width: 600px;
   margin: 0 auto;
 
   border-radius: 6px;
+
+  margin-top: 10px;
 
   img {
     width: 50px;
@@ -42,14 +45,15 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
+  width: 100%;
   display: flex;
   align-items: flex-start;
 
   gap: 12px;
 
   textarea {
-    width: 370px;
     height: 80px;
+    width: 100%;
 
     resize: none;
 

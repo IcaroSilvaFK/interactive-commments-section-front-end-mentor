@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 
 import { Card } from '../../components/Card';
+import { SectionLikeds } from '../../components/Card/styles';
+import { CardComments } from '../../components/CardComments';
 import { CommentTextInput } from '../../components/CommentTextInput';
 import { api } from '../../configs/global/api';
+import { usePosts } from '../../store/posts';
 import { useUser } from '../../store/users';
 
 import { Container, SectionComments, SectionPosts } from './styles';
@@ -26,60 +29,51 @@ interface IPostsProps extends IPostsBase {
   replies: IPostsBase[];
 }
 
-export function App() {
-  const { setUser } = useUser((state) => state);
-  const [posts, setPosts] = useState<IPostsProps[] | null>(null);
+export function Home() {
+  const { getAllPosts, posts } = usePosts((state) => state);
+  const { user } = useUser((state) => state);
 
   useEffect(() => {
-    window.addEventListener('scroll', smoothScroll);
-
     (async () => {
       try {
-        const { data } = await api.get<IPostsProps[]>('comments');
-        const { data: user } = await api.get<IUserProps>('currentUser');
-        setPosts(data);
-        setUser(user);
+        await getAllPosts();
       } catch (err) {
         console.log(err);
       }
     })();
-
-    return () => {
-      window.removeEventListener('scroll', smoothScroll);
-    };
   }, []);
-
-  function smoothScroll() {
-    window.scroll({
-      behavior: 'smooth',
-    });
-  }
 
   return (
     <Container>
       {posts &&
         posts.map((post) => (
-          <SectionPosts>
+          <SectionPosts key={post.id}>
             <Card
-              username={post.user.username}
-              avatar_url={post.user.image.webp}
+              username={post.user.name}
+              avatar_url={post.user.avatar}
               content={post.content}
-              created={post.createdAt}
-              likeds={post.score}
+              created={post.created_at}
+              _countLikeds={post._count.likeds}
               key={post.id}
               userId={post.user.id}
+              post_id={post.id}
+              likeds={post.likeds}
+              test={post.likeds.map((liked) => liked.user_id === user?.id)[0]}
             />
-            {post.replies.length > 0 && (
+            {post.comments.length > 0 && (
               <SectionComments key={post.content}>
-                {post.replies.map((comment) => (
-                  <Card
-                    username={comment.user.username}
-                    avatar_url={comment.user.image.webp}
+                {post.comments.map((comment) => (
+                  <CardComments
+                    username={comment.user.name}
+                    avatar_url={comment.user.avatar}
                     content={comment.content}
-                    created={comment.createdAt}
-                    likeds={comment.score}
+                    created={comment.created_at}
+                    likeds={comment.likeds}
                     key={comment.id}
                     userId={comment.user.id}
+                    _countLikeds={comment._count.likeds}
+                    post_id={post.id}
+                    comment_id={comment.id}
                   />
                 ))}
               </SectionComments>
