@@ -1,6 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
+import { Modal } from './components/Modal';
 
 import { Routes } from './routes';
 
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <GlobalCSS />
       <Routes />
+      <Modal />
     </ThemeProvider>
   </React.StrictMode>
 );

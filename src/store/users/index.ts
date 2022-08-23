@@ -3,9 +3,8 @@ import { persist, devtools } from 'zustand/middleware';
 
 interface IUserProps {
   username: string;
-  image: {
-    webp: string;
-  };
+  name: string;
+  avatar: string;
   id: string;
 }
 

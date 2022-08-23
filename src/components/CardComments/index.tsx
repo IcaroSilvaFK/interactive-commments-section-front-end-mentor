@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { MdReply, MdDelete, MdModeEdit } from 'react-icons/md';
 import { FiPlus, FiMinus } from 'react-icons/fi';
 import { format } from 'date-fns';
 import { AiOutlineClose } from 'react-icons/ai';
 
+import { Modal } from '../Modal';
 import { useUser } from '../../store/users';
 import { api } from '../../configs/global/api';
 import { usePosts } from '../../store/posts';
@@ -37,10 +38,10 @@ interface ICardProps {
   userId: string;
   post_id: string;
   likeds: LikedsProps[];
-  test?: boolean;
+  comment_id: string;
 }
 
-export function Card({
+export function CardComments({
   avatar_url,
   content,
   created,
@@ -49,7 +50,7 @@ export function Card({
   userId,
   post_id,
   likeds,
-  test,
+  comment_id,
 }: ICardProps) {
   const dateFormatter = format(new Date(created), 'h	  MMMM yyyy');
   const { user } = useUser((state) => state);
@@ -57,17 +58,20 @@ export function Card({
   const { handleOpen } = useModal((state) => state);
 
   const [isReply, setIsRepy] = useState(false);
-  const [isEditState, setIsEditState] = useState(false);
+  const [isEditComment, setIsEditComment] = useState(false);
 
-  async function handleLikePost(post_id: string) {
+  const userLabel = content.slice(content.indexOf('@'), content.indexOf(' '));
+  const contentText = content.slice(content.indexOf(' ') + 1, content.length);
+
+  async function handleLikePost(comment_id: string) {
     if (!user) return;
 
     try {
-      await api.post('/likeds', {
+      await api.post('/post/comment/like', {
         user_id: user.id,
-        post_id,
+        comment_id,
       });
-      getAllPosts();
+      await getAllPosts();
     } catch (err) {
       console.log(err);
     }
@@ -75,25 +79,15 @@ export function Card({
 
   async function handleRemoveLikeFromPost(like: LikedsProps[]) {
     const filteredLikeds = like.filter((like) => like.user_id === user?.id)[0];
-
-    await api.delete(`likeds/${filteredLikeds.id}`);
+    await api.delete(`/post/comment/like/${filteredLikeds.id}`);
     await getAllPosts();
-  }
-
-  async function handleDeletePost(postId: string) {
-    try {
-      await api.delete(`/posts/${postId}`);
-      await getAllPosts();
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   return (
     <>
       <Container>
         <SectionLikeds>
-          <button onClick={() => handleLikePost(post_id)}>
+          <button onClick={() => handleLikePost(comment_id)}>
             <FiPlus size={20} />
           </button>
           <b>{_countLikeds}</b>
@@ -112,13 +106,13 @@ export function Card({
             <ContainerButtons>
               <button
                 className='delete'
-                onClick={() => handleOpen(post_id, 'post')}
+                onClick={() => handleOpen(comment_id, 'comment')}
               >
                 <MdDelete size={20} />
                 Delete
               </button>
-              <button onClick={() => setIsEditState((prev) => !prev)}>
-                {!isEditState ? (
+              <button onClick={() => setIsEditComment((prev) => !prev)}>
+                {!isEditComment ? (
                   <>
                     <MdModeEdit size={20} />
                     Edit
@@ -139,13 +133,16 @@ export function Card({
           )}
         </ContainerReply>
         <ContainerContent>
-          {!isEditState ? (
-            <p>{content}</p>
+          {!isEditComment ? (
+            <p>
+              <span>{userLabel} </span>
+              {contentText}
+            </p>
           ) : (
             <EditTextField
               value={content}
-              post_id={post_id}
-              resetStatus={() => setIsEditState(false)}
+              comment_id={comment_id}
+              resetStatus={() => setIsEditComment(false)}
             />
           )}
         </ContainerContent>

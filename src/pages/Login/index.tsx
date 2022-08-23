@@ -1,7 +1,17 @@
 import { Link } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
+import { useUser } from '../../store/users';
 import { Container, Column, Form, FieldSet, Between } from './styles';
+import { api } from '../../configs/global/api';
+import { useNavigate } from '../../hooks/useNavigate';
+
+interface IUserProps {
+  username: string;
+  name: string;
+  avatar: string;
+  id: string;
+}
 
 interface IFormProps {
   username: string;
@@ -9,11 +19,20 @@ interface IFormProps {
 
 export function Login() {
   const { register, handleSubmit, reset } = useForm<IFormProps>();
+  const { setUser } = useUser((state) => state);
+  const { push } = useNavigate();
 
-  const onSubmit: SubmitHandler<IFormProps> = (data) => {
-    console.log(data);
-
-    reset();
+  const onSubmit: SubmitHandler<IFormProps> = async ({ username }) => {
+    try {
+      const { data } = await api.post<{ user: IUserProps }>('/users/login', {
+        username,
+      });
+      setUser(data.user);
+      reset();
+      push('/home');
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
