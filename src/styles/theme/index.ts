@@ -17,4 +17,5 @@ export const theme = {
   fonts: {
     rubik: "'Rubik', sans-serif",
   },
+  sizes: {},
 };
