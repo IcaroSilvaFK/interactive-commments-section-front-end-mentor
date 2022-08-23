@@ -57,7 +57,7 @@ export function ReplyComponent({
       <img src={user?.avatar} alt={user?.username} />
       <Form onSubmit={handleSubmit(onSubmit)}>
         <textarea placeholder='Add a comment...' {...register('comment')} />
-        <button>Send</button>
+        <button>Send </button>
       </Form>
     </Container>
   );
