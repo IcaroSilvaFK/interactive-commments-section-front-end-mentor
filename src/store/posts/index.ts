@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { persist, devtools } from 'zustand/middleware';
+import { devtools } from 'zustand/middleware';
 import { api } from '../../configs/global/api';
 
 type UserProps = {
@@ -48,23 +48,16 @@ interface IUsePostsProps {
 }
 
 export const usePosts = create<IUsePostsProps>()(
-  devtools(
-    persist(
-      (set) => ({
-        posts: [],
-        async getAllPosts() {
-          try {
-            const { data } = await api.get<{ posts: PostsProps[] }>('/posts');
+  devtools((set) => ({
+    posts: [],
+    async getAllPosts() {
+      try {
+        const { data } = await api.get<{ posts: PostsProps[] }>('/posts');
 
-            set((state) => ({ ...state, posts: data.posts }));
-          } catch (err) {
-            console.log(err);
-          }
-        },
-      }),
-      {
-        name: '@posts:front-end-mentor',
+        set((state) => ({ ...state, posts: data.posts }));
+      } catch (err) {
+        console.log(err);
       }
-    )
-  )
+    },
+  }))
 );
