@@ -3,6 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 
 import { api } from '../../configs/global/api';
 import { usePosts } from '../../store/posts';
+import { Column } from '../CommentTextInput/styles';
 
 import { Container } from './styles';
 
@@ -23,7 +24,7 @@ export function EditTextField({
   post_id,
   resetStatus,
 }: IEditTextFieldProps) {
-  const { register, handleSubmit, reset } = useForm<IFormProps>();
+  const { register, handleSubmit, reset, watch } = useForm<IFormProps>();
   const { getAllPosts } = usePosts((state) => state);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ export function EditTextField({
   return (
     <Container onSubmit={handleSubmit(onSubmit)}>
       <textarea {...register('content')} />
+
       <button>Update</button>
     </Container>
   );

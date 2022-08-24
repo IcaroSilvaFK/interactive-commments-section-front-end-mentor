@@ -91,3 +91,16 @@ export const Form = styled.form`
     }
   }
 `;
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+
+  gap: 5px;
+
+  span {
+    font-size: 12px;
+    color: ${({ theme }) => theme.colors.neutral.grayishBlue};
+  }
+`;

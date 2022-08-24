@@ -4,7 +4,7 @@ import { usePosts } from '../../store/posts';
 
 import { useUser } from '../../store/users';
 
-import { Container, Form } from './styles';
+import { Container, Form, Column } from './styles';
 
 interface IFormProps {
   comment: string;
@@ -12,7 +12,7 @@ interface IFormProps {
 
 export function CommentTextInput() {
   const { user } = useUser((state) => state);
-  const { register, handleSubmit, reset } = useForm<IFormProps>();
+  const { register, handleSubmit, reset, watch } = useForm<IFormProps>();
   const { getAllPosts } = usePosts((state) => state);
 
   const onSubmit: SubmitHandler<IFormProps> = async ({ comment }) => {
@@ -36,7 +36,15 @@ export function CommentTextInput() {
     <Container>
       <img src={user?.avatar} alt={user?.username} />
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <textarea placeholder='Add a comment...' {...register('comment')} />
+        <Column>
+          <span>{watch('comment')?.length}/255</span>
+          <textarea
+            placeholder='Add a comment...'
+            {...register('comment')}
+            maxLength={255}
+          />
+        </Column>
+
         <button>Send</button>
       </Form>
     </Container>
